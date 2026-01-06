@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis 3 Bahasa Daerah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdf4; /* Light green bg */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2316a34a' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .option-btn {
+            transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .correct-anim {
+            animation: bounce 0.5s;
+        }
+        .wrong-anim {
+            animation: shake 0.5s;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        /* Scrollbar custom */
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #888; 
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 text-slate-800">
+
+    <div class="w-full max-w-4xl bg-white rounded-3xl card-shadow overflow-hidden border-4 border-green-100 relative">
+        
+        <!-- Header Decoration -->
+        <div class="h-3 bg-gradient-to-r from-green-400 to-emerald-600"></div>
+
+        <!-- STATE: START SCREEN -->
+        <div id="start-screen" class="p-8 text-center">
+            <div class="mb-4 inline-flex items-center justify-center w-20 h-20 bg-green-100 text-green-600 rounded-full text-3xl">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h1 class="text-3xl font-extrabold text-green-800 mb-2">Nusantara Polyglot</h1>
+            <p class="text-gray-500 mb-8">Pilih bahasa daerah yang ingin Anda pelajari:</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <!-- Pilihan 1: Danum/Serawai -->
+                <button onclick="startGame('serawai')" class="group relative bg-white border-2 border-green-200 hover:border-green-500 hover:bg-green-50 rounded-2xl p-6 transition-all hover:-translate-y-1 shadow-sm hover:shadow-md">
+                    <div class="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">Lengkap</div>
+                    <div class="text-3xl text-green-600 mb-3"><i class="fas fa-tree"></i></div>
+                    <h3 class="font-bold text-lg text-slate-800">Danum Serawai</h3>
+                    <p class="text-xs text-gray-500 mt-1">Kalimantan Barat</p>
+                </button>
+
+                <!-- Pilihan 2: Jawa -->
+                <button onclick="startGame('jawa')" class="group bg-white border-2 border-blue-200 hover:border-blue-500 hover:bg-blue-50 rounded-2xl p-6 transition-all hover:-translate-y-1 shadow-sm hover:shadow-md">
+                    <div class="text-3xl text-blue-600 mb-3"><i class="fas fa-mountain"></i></div>
+                    <h3 class="font-bold text-lg text-slate-800">Bahasa Jawa</h3>
+                    <p class="text-xs text-gray-500 mt-1">Jawa Tengah/Timur</p>
+                </button>
+
+                <!-- Pilihan 3: Sunda -->
+                <button onclick="startGame('sunda')" class="group bg-white border-2 border-purple-200 hover:border-purple-500 hover:bg-purple-50 rounded-2xl p-6 transition-all hover:-translate-y-1 shadow-sm hover:shadow-md">
+                    <div class="text-3xl text-purple-600 mb-3"><i class="fas fa-water"></i></div>
+                    <h3 class="font-bold text-lg text-slate-800">Bahasa Sunda</h3>
+                    <p class="text-xs text-gray-500 mt-1">Jawa Barat</p>
+                </button>
+            </div>
+
+            <div class="text-sm text-gray-400">
+                <i class="fas fa-info-circle mr-1"></i> Total 100 kosakata per bahasa
+            </div>
+        </div>
+
+        <!-- STATE: QUIZ SCREEN -->
+        <div id="quiz-screen" class="hidden p-6 max-w-2xl mx-auto">
+            <!-- Header: Progress & Score -->
+            <div class="flex justify-between items-center mb-6 text-sm font-bold text-gray-400">
+                <span id="progress-text">Soal 1/100</span>
+                <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full" id="score-badge">Skor: 0</span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-8">
+                <div id="progress-bar" class="bg-green-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="text-center mb-6">
+                <span id="target-language-badge" class="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-bold uppercase rounded-lg mb-3 tracking-wider">Bahasa</span>
+                
+                <h2 id="question-word" class="text-4xl font-extrabold text-slate-800 mb-2">Kata</h2>
+                
+                <!-- Sentence Context Box (Only shows for Serawai currently) -->
+                <div id="sentence-box" class="hidden bg-green-50 rounded-xl p-3 max-w-md mx-auto border border-green-100 mt-2">
+                    <p class="text-xs text-green-600 uppercase font-bold tracking-wider mb-1">Contoh Kalimat:</p>
+                    <p id="question-sentence" class="text-lg text-green-800 italic font-serif">"..."</p>
+                </div>
+                
+                <p class="text-gray-400 text-sm mt-6">Apa artinya dalam Bahasa Indonesia?</p>
+            </div>
+
+            <!-- Options Grid -->
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                <!-- Buttons generated by JS -->
+            </div>
+
+            <!-- Feedback Message -->
+            <div id="feedback-area" class="hidden text-center p-4 rounded-xl mb-4 font-bold border-2">
+                <!-- Feedback text populated by JS -->
+            </div>
+
+            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-6 rounded-xl shadow-lg">
+                Lanjut <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+        </div>
+
+        <!-- STATE: RESULT SCREEN -->
+        <div id="result-screen" class="hidden p-8 text-center">
+            <div class="mb-4">
+                <i class="fas fa-trophy text-5xl text-yellow-400 mb-2 drop-shadow-sm"></i>
+                <h2 class="text-2xl font-bold text-slate-800">Kuis Selesai!</h2>
+            </div>
+            
+            <div class="bg-green-50 rounded-2xl p-4 mb-6 border border-green-100 inline-block min-w-[200px]">
+                <p class="text-gray-500 text-sm mb-1">Skor Akhir Kamu</p>
+                <div class="text-4xl font-black text-green-600" id="final-score">0</div>
+            </div>
+
+            <!-- Summary Table -->
+            <div class="text-left mb-6">
+                <h3 class="font-bold text-slate-700 mb-2"><i class="fas fa-list-alt mr-2"></i>Kamus Perbandingan</h3>
+                <div class="overflow-auto max-h-96 custom-scroll border rounded-xl shadow-inner">
+                    <table class="w-full text-sm text-left text-gray-600 whitespace-nowrap">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-4 py-3 bg-gray-100">Serawai</th>
+                                <th class="px-4 py-3 bg-gray-100 text-blue-600">Jawa</th>
+                                <th class="px-4 py-3 bg-gray-100 text-purple-600">Sunda</th>
+                                <th class="px-4 py-3 bg-gray-100 font-bold">Indonesia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-table-body" class="bg-white divide-y divide-gray-100">
+                            <!-- Rows generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 max-w-lg mx-auto">
+                <button onclick="location.reload()" class="col-span-1 bg-white border-2 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold py-3 px-4 rounded-xl">
+                    <i class="fas fa-home mr-2"></i> Menu
+                </button>
+                <button onclick="replayQuiz()" class="col-span-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl">
+                    Ulangi <i class="fas fa-redo ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- DATA & LOGIC -->
+    <script>
+        // Database 100 Kata
+        const database = [
+            // --- KATA GANTI & ORANG (15) ---
+            { serawai: "Aku", indo: "Saya", jawa: "Aku / Kula", sunda: "Abdi / Urang", type: "Orang", s_serawai: "Aku handak kuman.", s_indo: "Saya mau makan." },
+            { serawai: "Ikau", indo: "Kamu", jawa: "Kowe / Panjenengan", sunda: "Maneh / Anjeun", type: "Orang", s_serawai: "Ikau kan kueh?", s_indo: "Kamu mau ke mana?" },
+            { serawai: "Io", indo: "Dia", jawa: "Deweke / Piyambakipun", sunda: "Manehna", type: "Orang", s_serawai: "Io tinduk hong huma.", s_indo: "Dia tidur di rumah." },
+            { serawai: "Itah", indo: "Kita", jawa: "Kita / Awake dhewe", sunda: "Urang sarerea", type: "Orang", s_serawai: "Itah tulak sama-sama.", s_indo: "Kita pergi bersama-sama." },
+            { serawai: "Ikei", indo: "Kami", jawa: "Kula / Kami", sunda: "Abdi sadaya", type: "Orang", s_serawai: "Ikei handak buli.", s_indo: "Kami mau pulang." },
+            { serawai: "Ulu", indo: "Orang", jawa: "Wong / Tiyang", sunda: "Jalma / Orang", type: "Orang", s_serawai: "Ulu kampung te.", s_indo: "Orang kampung itu." },
+            { serawai: "Apang", indo: "Ayah/Bapak", jawa: "Bapak / Rama", sunda: "Bapa / Pun Bapa", type: "Keluarga", s_serawai: "Apang tulak keladang.", s_indo: "Ayah pergi ke ladang." },
+            { serawai: "Inang", indo: "Ibu/Mamak", jawa: "Ibu / Simbok", sunda: "Indung / Ibu", type: "Keluarga", s_serawai: "Inang masak nasi.", s_indo: "Ibu memasak nasi." },
+            { serawai: "Aki", indo: "Kakek", jawa: "Mbah Kakung", sunda: "Aki", type: "Keluarga", s_serawai: "Aki mondok.", s_indo: "Kakek duduk." },
+            { serawai: "Ini", indo: "Nenek", jawa: "Mbah Putri", sunda: "Nini", type: "Keluarga", s_serawai: "Ini garing.", s_indo: "Nenek sakit." },
+            { serawai: "Pahari", indo: "Saudara", jawa: "Sedulur", sunda: "Dulur / Wargi", type: "Keluarga", s_serawai: "Kawan pahari.", s_indo: "Teman saudara." },
+            { serawai: "Anak", indo: "Anak", jawa: "Anak / Putra", sunda: "Budak / Murangkalih", type: "Keluarga", s_serawai: "Anak korik.", s_indo: "Anak kecil." },
+            { serawai: "Hatue", indo: "Laki-laki", jawa: "Lanang", sunda: "Lalaki / Pameget", type: "Orang", s_serawai: "Ulu hatue.", s_indo: "Orang laki-laki." },
+            { serawai: "Bawi", indo: "Perempuan", jawa: "Wadon / Estri", sunda: "Awewe / Istri", type: "Orang", s_serawai: "Anak bawi.", s_indo: "Anak perempuan." },
+            { serawai: "Tato", indo: "Leluhur", jawa: "Leluhur", sunda: "Karuhun", type: "Keluarga", s_serawai: "Tato hiang.", s_indo: "Leluhur." },
+
+            // --- ANGKA (5) ---
+            { serawai: "Ije", indo: "Satu", jawa: "Siji", sunda: "Hiji", type: "Angka", s_serawai: "Ije andau.", s_indo: "Satu hari." },
+            { serawai: "Due", indo: "Dua", jawa: "Loro", sunda: "Dua", type: "Angka", s_serawai: "Due kungan.", s_indo: "Dua ekor." },
+            { serawai: "Telo", indo: "Tiga", jawa: "Telu", sunda: "Tilu", type: "Angka", s_serawai: "Telo bulan.", s_indo: "Tiga bulan." },
+            { serawai: "Epat", indo: "Empat", jawa: "Papat", sunda: "Opat", type: "Angka", s_serawai: "Epat orang.", s_indo: "Empat orang." },
+            { serawai: "Lime", indo: "Lima", jawa: "Lima", sunda: "Lima", type: "Angka", s_serawai: "Jari lime.", s_indo: "Jari lima." },
+
+            // --- WAKTU (8) ---
+            { serawai: "Andau", indo: "Hari", jawa: "Dina", sunda: "Poe / Dinten", type: "Waktu", s_serawai: "Andau te.", s_indo: "Hari itu." },
+            { serawai: "Jewu", indo: "Besok", jawa: "Sesuk", sunda: "Isukan", type: "Waktu", s_serawai: "Jewu aku tulak.", s_indo: "Besok saya pergi." },
+            { serawai: "Male", indo: "Kemarin", jawa: "Wingi", sunda: "Kamari", type: "Waktu", s_serawai: "Male ujan.", s_indo: "Kemarin hujan." },
+            { serawai: "Sungsong", indo: "Pagi", jawa: "Isuk / Enjing", sunda: "Isuk-isuk", type: "Waktu", s_serawai: "Sungsong hari.", s_indo: "Pagi hari." },
+            { serawai: "Halemei", indo: "Sore", jawa: "Sore", sunda: "Sore", type: "Waktu", s_serawai: "Mani halemei.", s_indo: "Mandi sore." },
+            { serawai: "Malam", indo: "Malam", jawa: "Wengi", sunda: "Peuting / Wengi", type: "Waktu", s_serawai: "Jari malam.", s_indo: "Sudah malam." },
+            { serawai: "Jari", indo: "Sudah", jawa: "Wis / Sampun", sunda: "Enggeus / Parantos", type: "Waktu", s_serawai: "Jari kuman.", s_indo: "Sudah makan." },
+            { serawai: "Magun", indo: "Belum", jawa: "Durung / Dereng", sunda: "Acan / Teu Acan", type: "Waktu", s_serawai: "Magun tinduk.", s_indo: "Belum tidur." },
+
+            // --- TUBUH (10) ---
+            { serawai: "Kahulu", indo: "Kepala", jawa: "Sirah / Mustaka", sunda: "Hulu / Mastaka", type: "Tubuh", s_serawai: "Sakit kahulu.", s_indo: "Sakit kepala." },
+            { serawai: "Mata", indo: "Mata", jawa: "Mripat / Soca", sunda: "Panon / Soca", type: "Tubuh", s_serawai: "Mata nengoi.", s_indo: "Mata melihat." },
+            { serawai: "Urung", indo: "Hidung", jawa: "Irung", sunda: "Irung / Pangambung", type: "Tubuh", s_serawai: "Urung mancium.", s_indo: "Hidung mencium." },
+            { serawai: "Nyama", indo: "Mulut", jawa: "Cangkem / Tutuk", sunda: "Baham", type: "Tubuh", s_serawai: "Nyama kuman.", s_indo: "Mulut makan." },
+            { serawai: "Lenge", indo: "Tangan", jawa: "Tangan / Asta", sunda: "Leangan / Panangan", type: "Tubuh", s_serawai: "Lenge kuman.", s_indo: "Tangan (untuk) makan." },
+            { serawai: "Pai", indo: "Kaki", jawa: "Sikil / Ampeyan", sunda: "Suku / Sampean", type: "Tubuh", s_serawai: "Pai nanjung.", s_indo: "Kaki berjalan." },
+            { serawai: "Tanie", indo: "Perut", jawa: "Weteng / Padharan", sunda: "Beuteung", type: "Tubuh", s_serawai: "Tanie besuh.", s_indo: "Perut kenyang." },
+            { serawai: "Balau", indo: "Rambut", jawa: "Rambut / Rikma", sunda: "Buuk / Rambut", type: "Tubuh", s_serawai: "Balau panjang.", s_indo: "Rambut panjang." },
+            { serawai: "Pinding", indo: "Telinga", jawa: "Kuping / Talingan", sunda: "Ceuli / Cepil", type: "Tubuh", s_serawai: "Pinding nening.", s_indo: "Telinga mendengar." },
+            { serawai: "Ipun", indo: "Gigi", jawa: "Untu / Waja", sunda: "Huntu / Waos", type: "Tubuh", s_serawai: "Ipun sakit.", s_indo: "Gigi sakit." },
+
+            // --- KATA KERJA (18) ---
+            { serawai: "Kuman", indo: "Makan", jawa: "Mangan / Dahar", sunda: "Dahar / Neda", type: "Kerja", s_serawai: "Ayu kuman.", s_indo: "Ayo makan." },
+            { serawai: "Ngirup", indo: "Minum", jawa: "Ngombe / Ngunjuk", sunda: "Nginum / Eueut", type: "Kerja", s_serawai: "Ngirup danum.", s_indo: "Minum air." },
+            { serawai: "Tinduk", indo: "Tidur", jawa: "Turu / Sare", sunda: "Sare / Kulem", type: "Kerja", s_serawai: "Tinduk nyenyak.", s_indo: "Tidur nyenyak." },
+            { serawai: "Mani", indo: "Mandi", jawa: "Adus / Siram", sunda: "Mandi / Ibak", type: "Kerja", s_serawai: "Tulak mani.", s_indo: "Pergi mandi." },
+            { serawai: "Tulak", indo: "Pergi", jawa: "Lunga / Tindak", sunda: "Indit / Angkat", type: "Kerja", s_serawai: "Tulak kan pasar.", s_indo: "Pergi ke pasar." },
+            { serawai: "Buli", indo: "Pulang", jawa: "Bali / Kondur", sunda: "Balik / Mulih", type: "Kerja", s_serawai: "Handak buli.", s_indo: "Mau pulang." },
+            { serawai: "Mondok", indo: "Duduk", jawa: "Lungguh / Pinarak", sunda: "Diuk / Calik", type: "Kerja", s_serawai: "Mondok sini.", s_indo: "Duduk sini." },
+            { serawai: "Mendeng", indo: "Berdiri", jawa: "Ngadek", sunda: "Nangtung", type: "Kerja", s_serawai: "Mendeng te.", s_indo: "Berdiri itu." },
+            { serawai: "Nengoi", indo: "Melihat", jawa: "Ndelok / Mirsani", sunda: "Nempo / Ningali", type: "Kerja", s_serawai: "Nengoi TV.", s_indo: "Menonton TV." },
+            { serawai: "Bapander", indo: "Berbicara", jawa: "Ngomong / Ngendika", sunda: "Nyarita / Sasauran", type: "Kerja", s_serawai: "Dahang bapander.", s_indo: "Jangan bicara." },
+            { serawai: "Nasak", indo: "Memasak", jawa: "Masak", sunda: "Masak", type: "Kerja", s_serawai: "Inang nasak.", s_indo: "Ibu memasak." },
+            { serawai: "Mamili", indo: "Membeli", jawa: "Tuku / Mundhut", sunda: "Meuli / Meser", type: "Kerja", s_serawai: "Mamili gula.", s_indo: "Membeli gula." },
+            { serawai: "Nening", indo: "Mendengar", jawa: "Krungu / Mireng", sunda: "Ngadenge / Ngadangu", type: "Kerja", s_serawai: "Nening lagu.", s_indo: "Mendengar lagu." },
+            { serawai: "Mimit", indo: "Membawa", jawa: "Nggawa / Ngasta", sunda: "Mawa / Bantun", type: "Kerja", s_serawai: "Mimit tas.", s_indo: "Membawa tas." },
+            { serawai: "Nanjung", indo: "Berjalan Kaki", jawa: "Mlaku / Mlampah", sunda: "Leumpang", type: "Kerja", s_serawai: "Nanjung kan huma.", s_indo: "Berjalan ke rumah." },
+            { serawai: "Hete", indo: "Berhenti", jawa: "Mandeg", sunda: "Eureun", type: "Kerja", s_serawai: "Hete helo.", s_indo: "Berhenti dulu." },
+            { serawai: "Menter", indo: "Berbaring", jawa: "Goler / Leyeh-leyeh", sunda: "Goler", type: "Kerja", s_serawai: "Menter hong lantai.", s_indo: "Berbaring di lantai." },
+            { serawai: "Majual", indo: "Menjual", jawa: "Adol / Sade", sunda: "Jual / Ical", type: "Kerja", s_serawai: "Majual lauk.", s_indo: "Menjual ikan." },
+
+            // --- ALAM & BENDA (18) ---
+            { serawai: "Danum", indo: "Air", jawa: "Banyu / Toya", sunda: "Cai", type: "Alam", s_serawai: "Danum sungai.", s_indo: "Air sungai." },
+            { serawai: "Matanandau", indo: "Matahari", jawa: "Srengenge", sunda: "Panonpoe", type: "Alam", s_serawai: "Matanandau terang.", s_indo: "Matahari terang." },
+            { serawai: "Bulan", indo: "Bulan", jawa: "Wulan / Sasi", sunda: "Bulan", type: "Alam", s_serawai: "Bulan hai.", s_indo: "Bulan besar." },
+            { serawai: "Bintang", indo: "Bintang", jawa: "Lintang", sunda: "Bintang", type: "Alam", s_serawai: "Banyak bintang.", s_indo: "Banyak bintang." },
+            { serawai: "Ujan", indo: "Hujan", jawa: "Udan / Jawah", sunda: "Hujan", type: "Alam", s_serawai: "Andau ujan.", s_indo: "Hari hujan." },
+            { serawai: "Apui", indo: "Api", jawa: "Geni", sunda: "Seuneu", type: "Alam", s_serawai: "Apui panas.", s_indo: "Api panas." },
+            { serawai: "Riwut", indo: "Angin", jawa: "Angin", sunda: "Angin", type: "Alam", s_serawai: "Riwut kencang.", s_indo: "Angin kencang." },
+            { serawai: "Parung", indo: "Hutan", jawa: "Alas / Wana", sunda: "Leuweung", type: "Alam", s_serawai: "Masuk parung.", s_indo: "Masuk hutan." },
+            { serawai: "Kanan", indo: "Nasi", jawa: "Sega / Sekul", sunda: "Sangu", type: "Benda", s_serawai: "Kuman kanan.", s_indo: "Makan nasi." },
+            { serawai: "Levu", indo: "Rumah", jawa: "Omah / Griya", sunda: "Imah / Bumi", type: "Benda", s_serawai: "Levu kami.", s_indo: "Rumah kami." },
+            { serawai: "Lauk", indo: "Ikan", jawa: "Iwak", sunda: "Lauk", type: "Hewan", s_serawai: "Goreng lauk.", s_indo: "Goreng ikan." },
+            { serawai: "Asu", indo: "Anjing", jawa: "Asu / Segawon", sunda: "Anjing / Gogog", type: "Hewan", s_serawai: "Asu menggonggong.", s_indo: "Anjing menggonggong." },
+            { serawai: "Pitis", indo: "Uang", jawa: "Duit / Arta", sunda: "Duit / Artos", type: "Benda", s_serawai: "Enda du pitis.", s_indo: "Tidak punya uang." },
+            { serawai: "Baju", indo: "Baju", jawa: "Klambi / Rasukan", sunda: "Baju / Acuk", type: "Benda", s_serawai: "Baju bahandang.", s_indo: "Baju merah." },
+            { serawai: "Seroar", indo: "Celana", jawa: "Celana", sunda: "Calana", type: "Benda", s_serawai: "Seroar bilem.", s_indo: "Celana hitam." },
+            { serawai: "Lading", indo: "Pisau", jawa: "Peso", sunda: "Peso", type: "Benda", s_serawai: "Lading tajam.", s_indo: "Pisau tajam." },
+            { serawai: "Pinggan", indo: "Piring", jawa: "Piring", sunda: "Piring", type: "Benda", s_serawai: "Pinggan pecah.", s_indo: "Piring pecah." },
+            { serawai: "Jukung", indo: "Perahu", jawa: "Prahu", sunda: "Parahu", type: "Benda", s_serawai: "Naik jukung.", s_indo: "Naik perahu." },
+
+            // --- SIFAT & RASA (15) ---
+            { serawai: "Lasu", indo: "Panas", jawa: "Panas / Benter", sunda: "Panas", type: "Sifat", s_serawai: "Kopi lasu.", s_indo: "Kopi panas." },
+            { serawai: "Sedingen", indo: "Dingin", jawa: "Adem / Asrep", sunda: "Tiis", type: "Sifat", s_serawai: "Danum sedingen.", s_indo: "Air dingin." },
+            { serawai: "Lau", indo: "Lapar", jawa: "Luwe", sunda: "Lapar", type: "Sifat", s_serawai: "Aku lau.", s_indo: "Saya lapar." },
+            { serawai: "Besuh", indo: "Kenyang", jawa: "Wareg", sunda: "Wareg", type: "Sifat", s_serawai: "Jari besuh.", s_indo: "Sudah kenyang." },
+            { serawai: "Mangat", indo: "Enak", jawa: "Enak / Eco", sunda: "Ngenah / Raos", type: "Sifat", s_serawai: "Kanan mangat.", s_indo: "Nasi enak." },
+            { serawai: "Larung", indo: "Mahal", jawa: "Larang / Awis", sunda: "Mahal / Awis", type: "Sifat", s_serawai: "Rega larung.", s_indo: "Harga mahal." },
+            { serawai: "Murah", indo: "Murah", jawa: "Murah", sunda: "Murah", type: "Sifat", s_serawai: "Barang murah.", s_indo: "Barang murah." },
+            { serawai: "Ahai", indo: "Besar", jawa: "Gede / Ageng", sunda: "Gede / Ageung", type: "Sifat", s_serawai: "Batu ahai.", s_indo: "Batu besar." },
+            { serawai: "Korik", indo: "Kecil", jawa: "Cilik / Alit", sunda: "Leutik / Alit", type: "Sifat", s_serawai: "Rumah korik.", s_indo: "Rumah kecil." },
+            { serawai: "Pio", indo: "Baik/Bagus", jawa: "Apik / Sae", sunda: "Alus / Sae", type: "Sifat", s_serawai: "Kabar pio.", s_indo: "Kabar baik." },
+            { serawai: "Ja'at", indo: "Jelek/Jahat", jawa: "Elek / Awon", sunda: "Goreng / Awon", type: "Sifat", s_serawai: "Ulah ja'at.", s_indo: "Kelakuan jelek." },
+            { serawai: "Kejaw", indo: "Jauh", jawa: "Adoh / Tebih", sunda: "Jauh / Tebih", type: "Sifat", s_serawai: "Jalan kejaw.", s_indo: "Jalan jauh." },
+            { serawai: "Tukep", indo: "Dekat", jawa: "Cedak / Caket", sunda: "Deukeut / Caket", type: "Sifat", s_serawai: "Rumah tukep.", s_indo: "Rumah dekat." },
+            { serawai: "Sanang", indo: "Senang", jawa: "Seneng / Bingah", sunda: "Bungah", type: "Sifat", s_serawai: "Ati sanang.", s_indo: "Hati senang." },
+            { serawai: "Mikeh", indo: "Takut", jawa: "Wedi / Ajrih", sunda: "Sieun", type: "Sifat", s_serawai: "Aku mikeh.", s_indo: "Saya takut." },
+
+            // --- WARNA, ARAH & LAINNYA (11) ---
+            { serawai: "Bahenda", indo: "Kuning", jawa: "Kuning", sunda: "Koneng", type: "Warna", s_serawai: "Warna bahenda.", s_indo: "Warna kuning." },
+            { serawai: "Bahandang", indo: "Merah", jawa: "Abang / Abrit", sunda: "Beureum", type: "Warna", s_serawai: "Bunga bahandang.", s_indo: "Bunga merah." },
+            { serawai: "Baputi", indo: "Putih", jawa: "Putih / Pethak", sunda: "Bodas", type: "Warna", s_serawai: "Kertas baputi.", s_indo: "Kertas putih." },
+            { serawai: "Bilem", indo: "Hitam", jawa: "Ireng / Cemeng", sunda: "Hideung", type: "Warna", s_serawai: "Rambut bilem.", s_indo: "Rambut hitam." },
+            { serawai: "Sambil", indo: "Kiri", jawa: "Kiwa / Kiring", sunda: "Kenca", type: "Arah", s_serawai: "Belok sambil.", s_indo: "Belok kiri." },
+            { serawai: "Gantau", indo: "Kanan", jawa: "Tengen", sunda: "Katuhu", type: "Arah", s_serawai: "Tangan gantau.", s_indo: "Tangan kanan." },
+            { serawai: "Ngambu", indo: "Atas", jawa: "Dhuwur / Inggil", sunda: "Luhur", type: "Arah", s_serawai: "Hong ngambu.", s_indo: "Di atas." },
+            { serawai: "Penda", indo: "Bawah", jawa: "Ngisor / Handhap", sunda: "Handap", type: "Arah", s_serawai: "Hong penda.", s_indo: "Di bawah." },
+            { serawai: "Eweh", indo: "Siapa", jawa: "Sapa / Sinten", sunda: "Saha", type: "Tanya", s_serawai: "Eweh ara?", s_indo: "Siapa nama?" },
+            { serawai: "Narai", indo: "Apa", jawa: "Apa / Punapa", sunda: "Naon", type: "Tanya", s_serawai: "Narai kabar?", s_indo: "Apa kabar?" },
+            { serawai: "Kueh", indo: "Mana/Di mana", jawa: "Ngendi / Wonten pundi", sunda: "Dimana", type: "Tanya", s_serawai: "Hong kueh?", s_indo: "Di mana?" },
+            { serawai: "Pea", indo: "Kapan", jawa: "Kapan", sunda: "Iraha", type: "Tanya", s_serawai: "Pea buli?", s_indo: "Kapan pulang?" },
+            { serawai: "Buhen", indo: "Mengapa", jawa: "Ngapa / Kenging menapa", sunda: "Kunaon", type: "Tanya", s_serawai: "Buhen manangis?", s_indo: "Mengapa menangis?" },
+            { serawai: "Enda", indo: "Tidak", jawa: "Ora / Mboten", sunda: "Henteu / Teu", type: "Umum", s_serawai: "Aku enda ta'u.", s_indo: "Saya tidak tahu." },
+            { serawai: "Au", indo: "Iya", jawa: "Iya / Inggih", sunda: "Enya / Muhun", type: "Umum", s_serawai: "Au, bujur.", s_indo: "Iya, benar." },
+            { serawai: "Dahang", indo: "Jangan", jawa: "Aja / Ampun", sunda: "Ulah / Teu kenging", type: "Perintah", s_serawai: "Dahang gutu.", s_indo: "Jangan begitu." }
+        ];
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let totalQuestions = 0;
+        let currentMode = 'serawai'; // 'serawai', 'jawa', 'sunda'
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function startGame(mode) {
+            currentMode = mode;
+            // Reset State
+            score = 0;
+            currentIndex = 0;
+            
+            // Shuffle database dan AMBIL SEMUA
+            const shuffledDb = shuffle([...database]);
+            currentQuestions = shuffledDb; 
+            totalQuestions = currentQuestions.length;
+
+            // UI Changes
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            // Set Target Language Label
+            const langLabel = document.getElementById('target-language-badge');
+            if(mode === 'serawai') {
+                langLabel.innerText = "Bahasa Danum Serawai";
+                langLabel.className = "inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-bold uppercase rounded-lg mb-3 tracking-wider";
+            } else if (mode === 'jawa') {
+                langLabel.innerText = "Bahasa Jawa";
+                langLabel.className = "inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold uppercase rounded-lg mb-3 tracking-wider";
+            } else if (mode === 'sunda') {
+                langLabel.innerText = "Bahasa Sunda";
+                langLabel.className = "inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold uppercase rounded-lg mb-3 tracking-wider";
+            }
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = currentQuestions[currentIndex];
+            
+            // Update Progress
+            document.getElementById('progress-text').innerText = `Soal ${currentIndex + 1}/${totalQuestions}`;
+            document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / totalQuestions) * 100}%`;
+            document.getElementById('score-badge').innerText = `Skor: ${score}`;
+            
+            // Determine Question Word based on Mode
+            let questionText = "";
+            let sentenceBox = document.getElementById('sentence-box');
+            
+            if (currentMode === 'serawai') {
+                questionText = q.serawai;
+                // Show sentence only for Serawai as we have the data
+                sentenceBox.classList.remove('hidden');
+                document.getElementById('question-sentence').innerText = `"${q.s_serawai}"`;
+            } else if (currentMode === 'jawa') {
+                questionText = q.jawa;
+                // Hide sentence for now as we don't have Javanese sentences in DB
+                sentenceBox.classList.add('hidden');
+            } else if (currentMode === 'sunda') {
+                questionText = q.sunda;
+                sentenceBox.classList.add('hidden');
+            }
+
+            document.getElementById('question-word').innerText = questionText;
+
+            // Generate Options (Always Indonesian)
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = ''; 
+            
+            let options = [q.indo];
+            
+            const distractors = database.filter(item => item.indo !== q.indo);
+            const shuffledDistractors = shuffle(distractors).slice(0, 3);
+            shuffledDistractors.forEach(d => options.push(d.indo));
+            
+            options = shuffle(options);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn w-full bg-white border-2 border-gray-200 text-gray-700 font-bold py-3 px-4 rounded-xl text-left hover:border-green-400 focus:outline-none';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(btn, opt, q.indo);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Reset Feedback UI
+            document.getElementById('feedback-area').classList.add('hidden');
+            document.getElementById('feedback-area').className = 'hidden text-center p-4 rounded-xl mb-4 font-bold border-2'; 
+            document.getElementById('next-btn').classList.add('hidden');
+        }
+
+        function checkAnswer(btn, selected, correct) {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            const feedbackArea = document.getElementById('feedback-area');
+            feedbackArea.classList.remove('hidden');
+            
+            const currentQ = currentQuestions[currentIndex];
+
+            // Build Translation Text
+            const translationHTML = `
+                <div class="mt-3 pt-3 border-t border-gray-200 grid grid-cols-2 gap-2 text-sm text-left">
+                    <div><span class="text-green-700 font-bold">Serawai:</span> ${currentQ.serawai}</div>
+                    <div><span class="text-blue-600 font-bold">Jawa:</span> ${currentQ.jawa}</div>
+                    <div><span class="text-purple-600 font-bold">Sunda:</span> ${currentQ.sunda}</div>
+                    <div><span class="text-gray-600 font-bold">Indo:</span> ${currentQ.indo}</div>
+                </div>
+            `;
+
+            if (selected === correct) {
+                score += 10;
+                btn.classList.remove('border-gray-200', 'bg-white');
+                btn.classList.add('bg-green-500', 'border-green-600', 'text-white', 'correct-anim');
+                
+                feedbackArea.className = 'block text-center p-4 rounded-xl mb-4 font-bold border-2 bg-green-50 border-green-200 text-green-800';
+                feedbackArea.innerHTML = `
+                    <div class="text-lg"><i class="fas fa-check-circle mr-2"></i>Benar!</div>
+                    ${translationHTML}
+                `;
+            } else {
+                btn.classList.remove('border-gray-200', 'bg-white');
+                btn.classList.add('bg-red-500', 'border-red-600', 'text-white', 'wrong-anim');
+                
+                buttons.forEach(b => {
+                    if (b.innerText === correct) {
+                        b.classList.add('bg-green-500', 'text-white', 'border-green-600');
+                    }
+                });
+
+                feedbackArea.className = 'block text-center p-4 rounded-xl mb-4 font-bold border-2 bg-red-50 border-red-200 text-red-800';
+                feedbackArea.innerHTML = `
+                    <div class="text-lg"><i class="fas fa-times-circle mr-2"></i>Salah. Yang benar: ${correct}</div>
+                    ${translationHTML}
+                `;
+            }
+
+            document.getElementById('score-badge').innerText = `Skor: ${score}`;
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < totalQuestions) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            const finalScore = score;
+            const maxScore = totalQuestions * 10;
+            document.getElementById('final-score').innerText = `${finalScore} / ${maxScore}`;
+            
+            const tableBody = document.getElementById('summary-table-body');
+            tableBody.innerHTML = '';
+            
+            const sortedDb = [...database].sort((a, b) => a.serawai.localeCompare(b.serawai));
+
+            sortedDb.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-green-50 transition-colors border-b border-gray-100';
+                row.innerHTML = `
+                    <td class="px-4 py-2 font-bold text-gray-800">${item.serawai}</td>
+                    <td class="px-4 py-2 text-blue-600 italic">${item.jawa}</td>
+                    <td class="px-4 py-2 text-purple-600 italic">${item.sunda}</td>
+                    <td class="px-4 py-2 text-gray-700">${item.indo}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function replayQuiz() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+
+    </script>
+</body>
+</html>
